@@ -10,11 +10,16 @@ import sys
 
 # ======== CONSTANTS ============
 
-USE_FILENAME = True
-USE_REPETITION_POSITION = True
+print("This script is meant to be a proof of concept of how the position of a repetition with the group of repetitions can be used to avoid auto-propagation of alternative translations due to identical context in multiple occurrences.")
+print("Showing the current functionality by default. Toggle USE_REPETITION_POSITION to True to see the enhancement in action")
+print("===================================================================================================================")
 
+USE_FILENAME = True
+USE_REPETITION_POSITION = False
+TEST_SEGMENT = "Petitions to the European Parliament"
 
 # ======== FUNCTIONS ============
+
 
 def create_hash(*match_props):
     """ Creates hash value of a tuple including details such as the segment's source text and
@@ -168,7 +173,7 @@ for index, unit in enumerate(enriched_units):
     except AssertionError as e:
         print("Assertion failed: " + e)
 
-    if source_text == "Petitions to the European Parliament":
+    if source_text == TEST_SEGMENT:
         search_key = create_hash(tuple([source_text]))
         target_text = search_for_exact_match(search_key, match_type="default")
         translated_unit = (target_text,) + enriched_units[index] + (index,)
@@ -191,7 +196,7 @@ for index, unit in enumerate(enriched_units):
     except AssertionError as e:
         print(e)
 
-    if source_text == "Petitions to the European Parliament":
+    if source_text == TEST_SEGMENT:
         context = get_context(index, lines, source_file)
 
         str_search_key = create_hash(tuple([source_text]))
