@@ -10,13 +10,16 @@ import sys
 
 # ======== CONSTANTS ============
 
-print("This script is meant to be a proof of concept of how the position of a repetition with the group of repetitions can be used to avoid auto-propagation of alternative translations due to identical context in multiple occurrences.")
+print("This script is meant to be a proof of concept of how the position of a repetition with the group of repetitions\
+     can be used to avoid auto-propagation of alternative translations due to identical context in multiple occurrences.")
 print("Showing the current functionality by default. Toggle USE_REPETITION_POSITION to True to see the enhancement in action")
 print("===================================================================================================================")
 
 USE_FILENAME = True
 USE_REPETITION_POSITION = False
 TEST_SEGMENT = "Petitions to the European Parliament"
+project_save = 'project_save_en-el_02.tmx'
+source_file = 'text1.txt'
 
 # ======== FUNCTIONS ============
 
@@ -126,7 +129,6 @@ def get_context(index, lines, file=None):
 
 
 def search_for_matches(search_key, match_type):
-    project_save = 'project_save_en-el_02.tmx'
     if match_type == 'default':
         matches = get_translations(project_save)[1]
     elif match_type == 'alternative':
@@ -147,7 +149,7 @@ def search_for_exact_match(search_key, match_type):
 
 # ======== BUSINESS LOGIC ============
 
-source_file = 'text1.txt'
+
 with open(source_file) as f:
     lines = [line.strip() for line in f.readlines() if line != '\n']
 
