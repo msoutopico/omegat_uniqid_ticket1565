@@ -1,11 +1,8 @@
 import xml.etree.ElementTree as ET
-from io import StringIO, BytesIO
-from lxml import etree
 from tabulate import tabulate
 import hashlib
 import pprint
-from translate.storage.tmx import tmxfile
-import sys
+# from translate.storage.tmx import tmxfile
 
 
 # ======== CONSTANTS ============
