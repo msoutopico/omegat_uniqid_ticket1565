@@ -5,12 +5,18 @@ import pprint
 # from translate.storage.tmx import tmxfile
 
 
-# ======== CONSTANTS ============
+# ======== DESCRIPTION ============
 
 print("This script is meant to be a proof of concept of how the position of a repetition with the group of repetitions\
      can be used to avoid auto-propagation of alternative translations due to identical context in multiple occurrences.")
-print("Showing the current functionality by default. Toggle USE_REPETITION_POSITION to True to see the enhancement in action")
-print("===================================================================================================================")
+print("Showing the current functionality by default. Toggle USE_REPETITION_POSITION to True to see the enhancement in action.")
+print("Preconditions:")
+print("The rpos value (position of a segment within a group of repetitions) has been saved to the working TM of the project\
+    file `project_save.tmx`, as a property pf `<tu>`, e.g. `<prop type='rpos'>2</prop>` ")
+print("======================================================================================================")
+
+
+# ======== CONSTANTS ============
 
 USE_FILENAME = True
 USE_REPETITION_POSITION = False
@@ -18,8 +24,8 @@ TEST_SEGMENT = "Petitions to the European Parliament"
 project_save = 'project_save_en-el_02.tmx'
 source_file = 'text1.txt'
 
-# ======== FUNCTIONS ============
 
+# ======== FUNCTIONS ============
 
 def create_hash(*match_props):
     """ Creates hash value of a tuple including details such as the segment's source text and
@@ -125,15 +131,6 @@ def get_context(index, lines, file=None):
         return prev_segm, next_segm
 
 
-def search_for_matches(search_key, match_type):
-    if match_type == 'default':
-        matches = get_translations(project_save)[1]
-    elif match_type == 'alternative':
-        matches = get_translations(project_save)[0]
-    if search_key in matches:
-        return matches[search_key]
-
-
 def search_for_exact_match(search_key, match_type):
     project_save = 'project_save_en-el_02.tmx'
     if match_type == 'alternative':
@@ -146,21 +143,18 @@ def search_for_exact_match(search_key, match_type):
 
 # ======== BUSINESS LOGIC ============
 
-
 with open(source_file) as f:
     lines = [line.strip() for line in f.readlines() if line != '\n']
 
 enriched_units = add_positions_to_segments(lines)
-indexed_units = [list(u + (i+1,))
-                 for i, u in enumerate(enriched_units)]
-# print(tabulate(indexed_units, headers=["Seg. #", "Rep. pos.", "Segment"]))
 
 print("Source text:")
 print()
+indexed_units = [list(u + (i+1,)) for i, u in enumerate(enriched_units)]
 print_tabular(indexed_units)
 
 
-print("===================================================================================================================")
+print("======================================================================================================")
 print("Looking for default translations only (will ignore alternative translations):")
 print()
 
@@ -180,16 +174,14 @@ for index, unit in enumerate(enriched_units):
 
 print_tabular(translated_units)
 
-print("===================================================================================================================")
+print("======================================================================================================")
 print("Normal behaviour: looking for alternative translations (only use default if no alternative found):")
 print()
 
 translated_units = []
 for index, unit in enumerate(enriched_units):
-    # print(index, unit)
-    # print(enriched_units[index])
     source_text = unit[0]
-    rpos = unit[1]
+    rpos = unit[1]  # position within the group of repetitions
     try:
         assert enriched_units[index] == unit
     except AssertionError as e:
@@ -217,4 +209,4 @@ for index, unit in enumerate(enriched_units):
         translated_units.append(translated_unit)
 
 print_tabular(translated_units)
-print("======================================================================================================")
+print("=========================================================================================")
